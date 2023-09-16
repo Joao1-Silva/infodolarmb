@@ -12,52 +12,103 @@
             margin: 0;
             padding: 0;
             background-color: #588157;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
-        .parent {
-            width: 100%;
-            height: 100%;
+        /* .parent {
             display: grid;
             place-items: center
-        }
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        } */
         .child {
             height: 500px;
             width: 370px;
-            text-align: center;
+            display: grid;
+            place-items: center;
+            /* text-align: center; */
             color: white;
             background-color: #344e41;
             border-radius: 10px;
+
+            grid-template-rows: 100px 50px 1px 150px;
         }
 
         .title {
             font-family: Russo One;
+            margin: 0;
         }
         .subt {
             font-family: Inter;
             font-size: 800;
+            margin: 0;
         }
         .info {
             font-family: Inter;
             font-size: 200;
+            margin: 0;
         }
-        .subtitle {
+        .inputBox {
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            width: 200px;
+        }
+        .inputBox input {
+            position: absolute;
+            width: 100%;
+            padding: 10px;
+            border: 1px solid rgba(255,255,255,0.25);
+            background: #344e41;
+            border-radius: 5px;
+            outline: none;
+            color: #fff;
+            font-size: 1em;
+        }
+        .inputBox label {
+            position: absolute;
+            left: 0;
+            padding: 10px;
+            pointer-events: none;
+            font-size: 1em;
+            color: #588157;
+            text-transform: uppercase;
             font-family: Inter;
-            font-size: 800;
+            transition: 0.5s;
+        }
+        .inputBox input:valid ~ label,
+        .inputBox input:focus ~ label {
+            color: #789378;
+            transform: translateX(10px) translateY(-20px);
+            font-size: 0.65em;
+            padding: 0.10px;
+            background: #344e41;
+            border-left: 0.5px solid #789378;
         }
     </style>
+    <script src="./src/js/api.js"></script>
 </head>
 <body>
     <div class="parent">
         <div class="child">
-          <div class="childto">  
+          <!-- <div class="childto">   -->
             <h1 class="title">vDolarjs</h1>
             <h2 class="subt" id="price"></h2>
             <p class="info" id="info"></p>
 
-            <input type="number" id="bolivaresInput" oninput="convertirMegas()">
-            <span class="subtitle">Saldo to Megas🤑</span>
-            <p>Megas:</p>
-            <div id="resultado"></div>
-          </div>
+            <div class="inputBox">
+                <input type="text" id="bolivaresInput" oninput="convertirMegas()" required="required">
+                <label for="bolivaresInput">Saldo a datos</label>
+            </div>
+            <p style="margin: 0;">Megas:</p>
+            <div id="resultado" style="margin: 0;"></div>
+          <!-- </div> -->
         </div>
     </div>
 </body>
@@ -66,39 +117,23 @@
     const updateInfo = document.getElementById('info');
     const costoPorMega = 0.00139;
 
-    fetch('https://apivdolar.vercel.app/')
-        .then(response => response.json())
-        .then(data => {
-            const price = data.priceBCV;
-            const info = data.lastUpdate;
-            priceText.textContent = price;
-            updateInfo.textContent = info;
-            // console.log(data)
-        })
-        .catch(error => {
-            console.error('Error al consultar la API:', error);
-        });
-    
     function convertirMegas() {
-            // Obtener el valor ingresado por el usuario
-        const bs = parseInt(document.getElementById('bolivaresInput').value);
-
-        if (!isNaN(bs)) {
-            // Calcular la cantidad de dólares
-            const dollars = bs / priceText.textContent;
-
-            // Calcular la cantidad de megas
-            const mb = dollars / costoPorMega;
-
-            // Mostrar el resultado
-            document.getElementById('resultado').textContent = `${mb.toFixed(2)} megas`;
-        } else {
-            // Si el valor no es válido, mostrar un mensaje de error
-            document.getElementById('resultado').textContent = 'Ingresa un valor válido';
-        }
+      // Obtener el valor ingresado por el usuario
+      const bs = parseInt(document.getElementById('bolivaresInput').value);
+  
+      if (!isNaN(bs)) {
+        // Calcular la cantidad de dólares
+        const dollars = bs / priceText.textContent;
+  
+        // Calcular la cantidad de megas
+        const mb = dollars / costoPorMega;
+  
+        // Mostrar el resultado
+        document.getElementById('resultado').textContent = `${mb.toFixed(2)} megas`;
+      } else {
+        // Si el valor no es válido, mostrar un mensaje de error
+        document.getElementById('resultado').textContent = 'Ingresa un valor válido';
+      }
     }
-
-        // Llamar a la función inicialmente
-    convertirMegas();
 </script>
 </html>
